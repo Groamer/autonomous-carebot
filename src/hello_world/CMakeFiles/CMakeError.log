@@ -1,0 +1,55 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/groamer/visual_studio_code_ws/src/hello_world/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_ace0b/fast"
+/usr/bin/make -f CMakeFiles/cmTC_ace0b.dir/build.make CMakeFiles/cmTC_ace0b.dir/build
+make[1]: Entering directory '/home/groamer/visual_studio_code_ws/src/hello_world/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_ace0b.dir/CheckSymbolExists.c.o
+/usr/bin/cc     -o CMakeFiles/cmTC_ace0b.dir/CheckSymbolExists.c.o   -c /home/groamer/visual_studio_code_ws/src/hello_world/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTC_ace0b
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_ace0b.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTC_ace0b.dir/CheckSymbolExists.c.o  -o cmTC_ace0b -rdynamic 
+CMakeFiles/cmTC_ace0b.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x16): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_ace0b.dir/build.make:97: recipe for target 'cmTC_ace0b' failed
+make[1]: *** [cmTC_ace0b] Error 1
+make[1]: Leaving directory '/home/groamer/visual_studio_code_ws/src/hello_world/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_ace0b/fast' failed
+make: *** [cmTC_ace0b/fast] Error 2
+
+File /home/groamer/visual_studio_code_ws/src/hello_world/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/groamer/visual_studio_code_ws/src/hello_world/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTC_418b7/fast"
+/usr/bin/make -f CMakeFiles/cmTC_418b7.dir/build.make CMakeFiles/cmTC_418b7.dir/build
+make[1]: Entering directory '/home/groamer/visual_studio_code_ws/src/hello_world/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_418b7.dir/CheckFunctionExists.c.o
+/usr/bin/cc    -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTC_418b7.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.5/Modules/CheckFunctionExists.c
+Linking C executable cmTC_418b7
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_418b7.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTC_418b7.dir/CheckFunctionExists.c.o  -o cmTC_418b7 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_418b7.dir/build.make:97: recipe for target 'cmTC_418b7' failed
+make[1]: *** [cmTC_418b7] Error 1
+make[1]: Leaving directory '/home/groamer/visual_studio_code_ws/src/hello_world/CMakeFiles/CMakeTmp'
+Makefile:126: recipe for target 'cmTC_418b7/fast' failed
+make: *** [cmTC_418b7/fast] Error 2
+
+
