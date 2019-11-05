@@ -1,0 +1,1 @@
+/usr/bin/c++  -fPIC   -shared -Wl,-soname,libgtest.so -o libgtest.so CMakeFiles/gtest.dir/src/gtest-all.cc.o  -L/home/groamer/afstuderen_tom_remeeus/autonomous-carebot/src/turtlebot3_cimsolutions/cim_turtlebot3_mapping/gtest/gtest/src -lpthread -Wl,-rpath,/home/groamer/afstuderen_tom_remeeus/autonomous-carebot/src/turtlebot3_cimsolutions/cim_turtlebot3_mapping/gtest/gtest/src 
