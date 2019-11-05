@@ -4,6 +4,4 @@ Voor mijn afstudeerproject maak ik een prototype die als basis moet dienen voor 
 
 Verdere documentatie volgt nog, evenals een Engelse vertaling.
 
-[Named Link](http://www.google.fr/ "Named link title")
-http://www.google.fr/
-<http://example.com/>
+[Benodigde software](docs/dependencies.md "Document benodigde software")
