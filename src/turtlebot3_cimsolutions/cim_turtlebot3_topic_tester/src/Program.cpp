@@ -1,6 +1,5 @@
 #include "ros/ros.h"
 #include "std_msgs/String.h"
-#include <visualization_msgs/MarkerArray.h>
 
 #include <iostream>
 
@@ -11,13 +10,14 @@ void chatterCallback(const std_msgs::String::ConstPtr& msg)
 
 int main(int argc, char **argv)
 {
-    std::cout << "Hello world!" << std::endl;
+    std::string topic = "exploreState";
+    std::cout << "Hello, I am listening to topic '" << topic << "'." << std::endl;
 
-    ros::init(argc, argv, "listener");
+    ros::init(argc, argv, "topicTester");
 
     ros::NodeHandle n;
 
-    ros::Subscriber sub = n.subscribe("frontiers", 1000, chatterCallback);
+    ros::Subscriber sub = n.subscribe(topic, 1000, chatterCallback);
 
     ros::spin();
 
