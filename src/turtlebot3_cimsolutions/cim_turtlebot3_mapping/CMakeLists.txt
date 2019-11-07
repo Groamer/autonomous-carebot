@@ -22,8 +22,8 @@ include_directories(
 add_executable(
 	cim_turtlebot3_mapping
 	src/Program.cpp
-	#src/MapListener.cpp
-	#src/MapIO.cpp
+	src/MapListener.cpp
+	src/MapIO.cpp
 )
 target_link_libraries(
 	cim_turtlebot3_mapping
