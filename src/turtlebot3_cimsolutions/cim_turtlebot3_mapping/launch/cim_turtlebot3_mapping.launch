@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="cim_turtlebot3_mapping" type="cim_turtlebot3_mapping" name="cim_turtlebot3_mapping" output="screen"/>
+</launch>
