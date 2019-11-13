@@ -14,7 +14,7 @@ void MapListener::callback(const std_msgs::String::ConstPtr& message) {
     std::string data = message->data.c_str();
 
     if(data.compare("exploration_done") == 0) {
-        MapIO::saveMap("cim_turtlebot3_mapping_map");
+        MapIO::saveMap();
     }
 }
 

@@ -1,17 +1,23 @@
 #pragma once
 
 #include <stdlib.h>
+#include <dirent.h>
 #include <string>
+#include <vector>
+#include <cstdlib>
 
 namespace mapper {
     class MapIO {
         public:
+            static void saveMap();
+            static std::vector<std::string> loadMap();
+
+        private:
             MapIO();
             ~MapIO();
 
-            static void saveMap(std::string);
-            static void loadMap();
-
-        private:
+            static std::string getPath();
+            static void checkDirectory();
+            static std::string checkFiles();
     };
 }
