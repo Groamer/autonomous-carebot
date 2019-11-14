@@ -18,6 +18,5 @@ namespace mapper {
 
             static std::string getPath();
             static void checkDirectory();
-            static std::string checkFiles();
     };
 }

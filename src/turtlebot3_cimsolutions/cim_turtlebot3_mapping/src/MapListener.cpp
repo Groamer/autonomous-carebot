@@ -3,7 +3,7 @@
 using namespace mapper;
 
 MapListener::MapListener() {
-    init();
+    listen();
 }
 
 MapListener::~MapListener() {
@@ -18,7 +18,7 @@ void MapListener::callback(const std_msgs::String::ConstPtr& message) {
     }
 }
 
-void MapListener::init() {
+void MapListener::listen() {
     ros::NodeHandle nodeHandle;
     ros::Subscriber subscriber = nodeHandle.subscribe("exploreState", 1000, callback);
     ros::spin();

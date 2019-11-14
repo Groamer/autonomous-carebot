@@ -22,9 +22,9 @@ std::string MapIO::getPath() {
 }
 
 void MapIO::checkDirectory() {
-    //Create folder if it does not already exist
-    std::string folderCommand = "mkdir -p " + getPath();
-    system(folderCommand.c_str());
+    //Create directory if it does not already exist
+    std::string directoryCommand = "mkdir -p " + getPath();
+    system(directoryCommand.c_str());
 }
 
 void MapIO::saveMap() {
@@ -52,8 +52,6 @@ std::vector<std::string> MapIO::loadMap() {
             }
         }
         closedir(dir);
-    } else {
-        // produce error
     }
 
     return files;
