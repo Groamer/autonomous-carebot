@@ -13,6 +13,6 @@ namespace mapper {
 
         private:
             static void callback(const std_msgs::String::ConstPtr&);
-            void init();
+            void listen();
     };
 }

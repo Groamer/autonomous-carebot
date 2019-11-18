@@ -8,11 +8,6 @@ find_package(catkin REQUIRED COMPONENTS
 	genmsg
 )
 
-#add_message_files(FILES Num.msg)
-#add_service_files(FILES AddTwoInts.srv)
-
-#generate_messages(DEPENDENCIES std_msgs)
-
 catkin_package()
 
 include_directories(
@@ -20,15 +15,31 @@ include_directories(
 )
 
 add_executable(
-	cim_turtlebot3_mapping
-	src/Program.cpp
+	cim_turtlebot3_mapping_listener
+	src/ListenerApp.cpp
 	src/MapListener.cpp
 	src/MapIO.cpp
 )
 target_link_libraries(
-	cim_turtlebot3_mapping
+	cim_turtlebot3_mapping_listener
 	${catkin_LIBRARIES}
 )
-#add_dependencies(
-#	cim_turtlebot3_mapping
-#)
+add_dependencies(
+	cim_turtlebot3_mapping_listener
+	cim_turtlebot3_mapping_listener_cpp
+)
+
+add_executable(
+	cim_turtlebot3_mapping_provider
+	src/ProviderApp.cpp
+	src/MapProvider.cpp
+	src/MapIO.cpp
+)
+target_link_libraries(
+	cim_turtlebot3_mapping_provider
+	${catkin_LIBRARIES}
+)
+add_dependencies(
+	cim_turtlebot3_mapping_provider
+	cim_turtlebot3_mapping_provider_cpp
+)
