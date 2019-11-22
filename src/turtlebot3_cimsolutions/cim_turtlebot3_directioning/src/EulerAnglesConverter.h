@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <iostream>
 
 namespace directioner {
     struct Quaternion {
@@ -14,12 +13,10 @@ namespace directioner {
 
     class EulerAnglesConverter {
         public:
-            EulerAnglesConverter();
-            ~EulerAnglesConverter();
-
-            EulerAngles ToEulerAngles(Quaternion);
+            static EulerAngles ToEulerAngles(Quaternion);
 
         private:
-
+            EulerAnglesConverter();
+            ~EulerAnglesConverter();
     };
 }

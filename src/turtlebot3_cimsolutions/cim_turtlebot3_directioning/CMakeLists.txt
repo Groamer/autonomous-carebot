@@ -18,6 +18,7 @@ add_executable(
 	cim_turtlebot3_directioning
 	src/DirectioningApp.cpp
 	src/EulerAnglesConverter.cpp
+	src/DegreesConverter.cpp
 )
 target_link_libraries(
 	cim_turtlebot3_directioning
