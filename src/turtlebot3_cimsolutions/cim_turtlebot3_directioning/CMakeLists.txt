@@ -19,6 +19,8 @@ add_executable(
 	src/DirectioningApp.cpp
 	src/EulerAnglesConverter.cpp
 	src/DegreesConverter.cpp
+	src/OdometryListener.cpp
+	src/Rotate.cpp
 )
 target_link_libraries(
 	cim_turtlebot3_directioning
