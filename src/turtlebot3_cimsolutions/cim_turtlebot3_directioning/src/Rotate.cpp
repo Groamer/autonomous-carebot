@@ -2,13 +2,7 @@
 
 using namespace directioner;
 
-// Refresh rate in Herz
-static const int REFRESH_RATE = 10;
-// Amount of messsages allowed in queue before being dropped
-static const int QUEUE = 10;
-static const std::string TOPIC_NAME = "cmd_vel";
-
-bool isRotating = false;
+double rotationSpeed;
 
 Rotate::Rotate() {
     
@@ -19,49 +13,29 @@ Rotate::~Rotate() {
 }
 
 void Rotate::startRotating() {
-    ros::NodeHandle nodeHandle;
-    ros::Rate rate(REFRESH_RATE);
-
-    // Keep trying to connect until publisher is subscribed
-    while(ros::ok()) {
-        ros::Publisher publisher = nodeHandle.advertise<geometry_msgs::Twist>(TOPIC_NAME, QUEUE);
-        rate.sleep();
-
-        // Send message when publisher is subscribed and close loop
-        if (publisher.getNumSubscribers() > 0) {
-            geometry_msgs::Twist message;
-            message.angular.z = 0.5;
-
-            publisher.publish(message);
-            isRotating = true;
-            break;
-        }
-        ros::spinOnce();
-    }
+    rotationSpeed = 0.5;
+    publish();
 }
 
 void Rotate::stopRotating() {
-    ros::NodeHandle nodeHandle;
-    ros::Rate rate(REFRESH_RATE);
-
-    // Keep trying to connect until publisher is subscribed
-    while(ros::ok()) {
-        ros::Publisher publisher = nodeHandle.advertise<geometry_msgs::Twist>(TOPIC_NAME, QUEUE);
-        rate.sleep();
-
-        // Send message when publisher is subscribed and close loop
-        if (publisher.getNumSubscribers() > 0) {
-            geometry_msgs::Twist message;
-            message.angular.z = 0.0;
-
-            publisher.publish(message);
-            isRotating = false;
-            break;
-        }
-        ros::spinOnce();
-    }
+    rotationSpeed = 0.0;
+    publish();
 }
 
-bool Rotate::getIsRotating() {
-    return isRotating;
+void Rotate::publish() {
+    const std::string TOPIC_NAME = "cmd_vel";
+    // Amount of messsages allowed in queue before being dropped
+    const int QUEUE = 1;
+
+    ros::NodeHandle nodeHandle;
+    ros::Publisher publisher = nodeHandle.advertise<geometry_msgs::Twist>(TOPIC_NAME, QUEUE,
+        (ros::SubscriberStatusCallback)connectCallback);
+    ros::spin();
+}
+
+void Rotate::connectCallback(const ros::SingleSubscriberPublisher& publisher) {
+    geometry_msgs::Twist message;
+    message.angular.z = rotationSpeed;
+    publisher.publish(message);
+    ros::shutdown();
 }

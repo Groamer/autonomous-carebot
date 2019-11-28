@@ -17,12 +17,7 @@ void OdometryListener::callback(const sensor_msgs::Imu::ConstPtr& message) {
 }
 
 void OdometryListener::listen() {
-
-
-    
-        ros::NodeHandle nodeHandle;
-        ros::Subscriber subscriber = nodeHandle.subscribe("imu", 1000, callback);
-        ros::spin();
-
-
+    ros::NodeHandle nodeHandle;
+    ros::Subscriber subscriber = nodeHandle.subscribe("imu", 1000, callback);
+    ros::spin();
 }
