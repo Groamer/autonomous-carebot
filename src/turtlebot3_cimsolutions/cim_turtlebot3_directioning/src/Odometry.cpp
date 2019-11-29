@@ -38,7 +38,7 @@ void Odometry::callback(const sensor_msgs::Imu::ConstPtr& message) {
         verifyRotation();
     } else {
         isConnected = true;
-        //START ROTATING
+        Rotate::startRotating();
     }
 
     rate.sleep();
@@ -52,7 +52,7 @@ void Odometry::verifyRotation() {
 
         // Count a full 360 degrees turn if last known orientation is within 10 degrees of start rotation
         if(lastOrientation < startOrientation + 5 && lastOrientation > startOrientation - 5) {
-            //STOP ROTATING
+            Rotate::stopRotating();
         }
     }
 }

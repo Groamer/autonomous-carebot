@@ -1,9 +1,8 @@
 #include "Rotate.h"
 
-#include <iostream>
-
 using namespace directioner;
 
+static bool isConnected;
 double rotationSpeed;
 
 Rotate::Rotate() {
@@ -24,37 +23,22 @@ void Rotate::stopRotating() {
     publish();
 }
 
-//EDIT THIS TO PUBLISHER MEEP MEEP
-/*void Odometry::listen() {
+void Rotate::publish() {
+    isConnected = false;
     ros::NodeHandle nodeHandle;
+    ros::Rate rate(4);
+    ros::Publisher publisher = nodeHandle.advertise<geometry_msgs::Twist>("cmd_vel", 1,
+        (ros::SubscriberStatusCallback)callback);
 
     while(ros::ok() && !isConnected) {
-        ros::Rate rate(frequenty);
-
-        ros::Subscriber subscriber = nodeHandle.subscribe("imu", 1, callback);
-        std::cout << "trying to connect with: " << frequenty << std::endl;
-        frequenty = frequenty / 10;
-        ros::spinOnce();
         rate.sleep();
+        ros::spinOnce();
     }
-}*/
-
-void Rotate::publish() {
-    const std::string TOPIC_NAME = "cmd_vel";
-    // Amount of messsages allowed in queue before being dropped
-    const int QUEUE = 1;
-
-    ros::NodeHandle nodeHandle;
-    ros::Publisher publisher = nodeHandle.advertise<geometry_msgs::Twist>(TOPIC_NAME, QUEUE,
-        (ros::SubscriberStatusCallback)connectCallback);
-    ros::spin();
-
-    std::cout << "ENDING" << std::endl;
 }
 
-void Rotate::connectCallback(const ros::SingleSubscriberPublisher& publisher) {
+void Rotate::callback(const ros::SingleSubscriberPublisher& publisher) {
+    isConnected = true;
     geometry_msgs::Twist message;
     message.angular.z = rotationSpeed;
     publisher.publish(message);
-    //ros::shutdown();
 }

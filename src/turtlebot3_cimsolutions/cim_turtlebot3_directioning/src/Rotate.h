@@ -1,8 +1,8 @@
 #pragma once
 
-#include "ros/ros.h"
+#include <ros/ros.h>
 #include <std_msgs/String.h>
-#include "geometry_msgs/Twist.h"
+#include <geometry_msgs/Twist.h>
 
 namespace directioner {
     class Rotate {
@@ -15,7 +15,6 @@ namespace directioner {
             ~Rotate();
 
             static void publish();
-            static void connectCallback(const ros::SingleSubscriberPublisher&);
-
+            static void callback(const ros::SingleSubscriberPublisher&);
     };
 }
