@@ -19,7 +19,7 @@ add_executable(
 	src/DirectioningApp.cpp
 	src/EulerAnglesConverter.cpp
 	src/DegreesConverter.cpp
-	src/OdometryListener.cpp
+	src/Odometry.cpp
 	src/Rotate.cpp
 )
 target_link_libraries(
