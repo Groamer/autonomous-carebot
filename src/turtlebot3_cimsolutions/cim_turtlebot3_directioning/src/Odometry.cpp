@@ -3,9 +3,9 @@
 using namespace directioner;
 
 static const int QUEUE_SIZE = 1;
-static const int LISTEN_FREQUENCY = 100;
+static const int LISTEN_FREQUENCY = 10;
 static const std::string ORIENTATION_TOPIC = "imu";
-static const std::string MAGNETOMETER_TOPIC = "sensor_msgs/MagneticField";
+static const std::string MAGNETOMETER_TOPIC = "magnetic_field";
 
 static bool isRotating = false;
 static bool isMeasuring = false;
@@ -28,8 +28,8 @@ void Odometry::listen() {
     ros::NodeHandle nodeHandle;
     ros::Subscriber orientation = nodeHandle.subscribe(ORIENTATION_TOPIC, QUEUE_SIZE,
         orientationCallback);
-    ros::Subscriber magnetometer = nodeHandle.subscribe(MAGNETOMETER_TOPIC, 
-        QUEUE_SIZE, magnetometerCallback);
+    ros::Subscriber magnetometer = nodeHandle.subscribe(MAGNETOMETER_TOPIC, QUEUE_SIZE,
+        magnetometerCallback);
     ros::spin();
 }
 
@@ -80,7 +80,7 @@ void Odometry::endRotation(Quaternion quaternion) {
 
     std::cout << orientation << std::endl;
 
-    if(orientation > 350) {
+    if(orientation > 345) {
         isRotating = false;
         Rotate::stopRotating();
     }

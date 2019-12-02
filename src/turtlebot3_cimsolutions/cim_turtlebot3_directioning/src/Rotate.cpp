@@ -3,7 +3,7 @@
 using namespace directioner;
 
 static const int QUEUE_SIZE = 1;
-static const int PUBLISH_FREQUENCY = 100;
+static const int PUBLISH_FREQUENCY = 10;
 static const std::string PUBLISH_TOPIC = "cmd_vel";
 
 static bool isConnected = false;
