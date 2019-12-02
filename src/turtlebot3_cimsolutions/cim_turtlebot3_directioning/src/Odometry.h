@@ -4,10 +4,12 @@
 #include "EulerAnglesConverter.h"
 #include "DegreesConverter.h"
 
+#include <iostream>
+#include <string>
+#include <vector>
 #include <ros/ros.h>
 #include <sensor_msgs/Imu.h>
-#include <iostream>
-#include <vector>
+#include <sensor_msgs/MagneticField.h>
 
 namespace directioner {
     class Odometry {
@@ -17,8 +19,12 @@ namespace directioner {
 
         private:
             void listen();
-            static void callback(const sensor_msgs::Imu::ConstPtr&);
-            static void verifyRotation();
-            static void addOrientation(Quaternion);
+            static void orientationCallback(const sensor_msgs::Imu::ConstPtr&);
+            static void magnetometerCallback(const sensor_msgs::MagneticField::ConstPtr&);
+            static void beginRotation(Quaternion);
+            static void endRotation(Quaternion);
+            static void verifyRotation(Quaternion);
+            static void locateMagneticField();
+            static double calculateOrientation(Quaternion);
     };
 }

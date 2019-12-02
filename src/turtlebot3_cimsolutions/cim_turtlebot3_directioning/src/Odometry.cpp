@@ -2,11 +2,19 @@
 
 using namespace directioner;
 
-static const int LISTEN_FREQUENCY = 10;
 static const int QUEUE_SIZE = 1;
+static const int LISTEN_FREQUENCY = 100;
+static const std::string ORIENTATION_TOPIC = "imu";
+static const std::string MAGNETOMETER_TOPIC = "sensor_msgs/MagneticField";
 
-static bool isConnected = false;
-static std::vector<double> orientations;
+static bool isRotating = false;
+static bool isMeasuring = false;
+static bool isLocating = false;
+static bool isResetting = false;
+static int rotations = 0;
+static double currentOrientation = 0;
+static double previousOrientation = 0;
+static std::vector<double> measurements;
 
 Odometry::Odometry() {
     listen();
@@ -18,12 +26,14 @@ Odometry::~Odometry() {
 
 void Odometry::listen() {
     ros::NodeHandle nodeHandle;
-    ros::Subscriber subscriber = nodeHandle.subscribe("imu", QUEUE_SIZE, callback);   
+    ros::Subscriber orientation = nodeHandle.subscribe(ORIENTATION_TOPIC, QUEUE_SIZE,
+        orientationCallback);
+    ros::Subscriber magnetometer = nodeHandle.subscribe(MAGNETOMETER_TOPIC, 
+        QUEUE_SIZE, magnetometerCallback);
     ros::spin();
 }
 
-//ToDo: For now we read the default imu sensor data. Change this to magnetometer later.
-void Odometry::callback(const sensor_msgs::Imu::ConstPtr& message) {
+void Odometry::orientationCallback(const sensor_msgs::Imu::ConstPtr& message) {
     ros::Rate rate(LISTEN_FREQUENCY);
 
     Quaternion quaternion = {
@@ -32,33 +42,81 @@ void Odometry::callback(const sensor_msgs::Imu::ConstPtr& message) {
         message->orientation.z,
         message->orientation.w
     };
-    addOrientation(quaternion);
 
-    if(isConnected) {
-        verifyRotation();
-    } else {
-        isConnected = true;
-        Rotate::startRotating();
+    if(isRotating) {
+        verifyRotation(quaternion);
+    } else if(!isResetting) {
+        beginRotation(quaternion);
+    }
+
+    if(isResetting) {
+        endRotation(quaternion);
     }
 
     rate.sleep();
 }
 
-void Odometry::verifyRotation() {
-    // Start verifying after 10 measurements
-    if(orientations.size() >= 10) {
-        double startOrientation = orientations[0];
-        double lastOrientation = orientations[orientations.size() - 1];
+void Odometry::magnetometerCallback(const sensor_msgs::MagneticField::ConstPtr& message) {
+    ros::Rate rate(LISTEN_FREQUENCY);
 
-        // Count a full 360 degrees turn if last known orientation is within 10 degrees of start rotation
-        if(lastOrientation < startOrientation + 5 && lastOrientation > startOrientation - 5) {
-            Rotate::stopRotating();
-        }
+    if(isMeasuring) {
+        std::cout << "Magnetic sensor: " << message << std::endl;
+    }
+
+    if(isLocating) {
+        locateMagneticField();
+    }
+
+    rate.sleep();
+}
+
+void Odometry::beginRotation(Quaternion quaternion) {
+    isRotating = true;
+    Rotate::startRotating();
+}
+
+void Odometry::endRotation(Quaternion quaternion) {
+    double orientation = calculateOrientation(quaternion);
+
+    std::cout << orientation << std::endl;
+
+    if(orientation > 350) {
+        isRotating = false;
+        Rotate::stopRotating();
     }
 }
 
-void Odometry::addOrientation(Quaternion quaternion) {
+void Odometry::verifyRotation(Quaternion quaternion) {
+    currentOrientation = calculateOrientation(quaternion);
+
+    if(currentOrientation < previousOrientation) {
+        rotations ++;
+
+        switch(rotations) {
+            case 1:
+                std::cout << "measuring magnetic fields" << std::endl;
+                isMeasuring = true;
+                break;
+            case 2:
+                std::cout << "locating magnetic field" << std::endl;
+                isLocating = true;
+                break;
+            default:
+                isMeasuring = false;
+                isLocating = false;
+                isResetting = true;
+                std::cout << "could not find magnetic fields" << std::endl;
+        }
+    }
+
+    previousOrientation = currentOrientation;
+}
+
+void Odometry::locateMagneticField() {
+
+}
+
+double Odometry::calculateOrientation(Quaternion quaternion) {
     EulerAngles eulerAngles = EulerAnglesConverter::ToEulerAngles(quaternion);
-    double orientation = DegreesConverter::ToDegrees(eulerAngles.yaw);
-    orientations.push_back(orientation);
+    return DegreesConverter::ToDegrees(eulerAngles.yaw);
 }

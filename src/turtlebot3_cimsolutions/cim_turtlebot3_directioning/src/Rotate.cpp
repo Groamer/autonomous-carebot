@@ -2,8 +2,12 @@
 
 using namespace directioner;
 
-static bool isConnected;
-double rotationSpeed;
+static const int QUEUE_SIZE = 1;
+static const int PUBLISH_FREQUENCY = 100;
+static const std::string PUBLISH_TOPIC = "cmd_vel";
+
+static bool isConnected = false;
+static double rotationSpeed = 0.0;
 
 Rotate::Rotate() {
     
@@ -26,8 +30,8 @@ void Rotate::stopRotating() {
 void Rotate::publish() {
     isConnected = false;
     ros::NodeHandle nodeHandle;
-    ros::Rate rate(4);
-    ros::Publisher publisher = nodeHandle.advertise<geometry_msgs::Twist>("cmd_vel", 1,
+    ros::Rate rate(PUBLISH_FREQUENCY);
+    ros::Publisher publisher = nodeHandle.advertise<geometry_msgs::Twist>(PUBLISH_TOPIC, QUEUE_SIZE,
         (ros::SubscriberStatusCallback)callback);
 
     while(ros::ok() && !isConnected) {
