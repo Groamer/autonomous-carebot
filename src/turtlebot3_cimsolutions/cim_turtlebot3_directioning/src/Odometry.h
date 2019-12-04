@@ -20,11 +20,13 @@ namespace directioner {
         private:
             void listen();
             static void orientationCallback(const sensor_msgs::Imu::ConstPtr&);
+            static void angularVelocityCallback(const sensor_msgs::Imu::ConstPtr&);
             static void magnetometerCallback(const sensor_msgs::MagneticField::ConstPtr&);
             static void beginRotation(Quaternion);
-            static void endRotation(Quaternion);
             static void verifyRotation(Quaternion);
             static void locateMagneticField();
             static double calculateOrientation(Quaternion);
+            static void shutdown(Quaternion, bool);
+            static bool isRotated(double, double);
     };
 }
