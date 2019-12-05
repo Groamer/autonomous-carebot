@@ -15,6 +15,7 @@ void MapListener::callback(const std_msgs::String::ConstPtr& message) {
 
     if(data.compare("exploration_done") == 0) {
         MapIO::saveMap();
+	ros::shutdown();
     }
 }
 
