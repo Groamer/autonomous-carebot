@@ -2,7 +2,6 @@
 
 using namespace directioner;
 
-const static int LISTEN_FREQUENCY = 10;
 const static int QUEUE_SIZE = 1;
 const static std::string TOPIC_IMU = "imu";
 const static std::string TOPIC_TWIST = "cmd_vel";
@@ -19,32 +18,35 @@ static MagneticField magneticField;
 template<>
 void PublisherSubscriber<geometry_msgs::Twist, sensor_msgs::Imu>::subscriberCallback(
         const sensor_msgs::Imu::ConstPtr& receivedMessage) {
+    double sensorSpeed = receivedMessage->angular_velocity.z;
+    
+    if(sensorSpeed > 0.01 || rotationSpeed > 0) {
+        double orientation = Orientation::getOrientation(receivedMessage);
+        if(Orientation::isRotated(orientationBuffer, orientation)) {
+            rotations ++;
 
-    // Close node when done with measuring
-    if(rotationSpeed == 0 && receivedMessage->angular_velocity.z < 0.1) {
+            switch(rotations) {
+                case 1: 
+                    isMeasuring = true;
+                    break;
+                case 2:
+                    isLocating = true;
+                    break;
+                default:
+                    rotationSpeed = 0;
+                    isMeasuring = false;
+                    isLocating = false;
+            }
+        }
+        orientationBuffer = orientation;
+
+        geometry_msgs::Twist message;
+        message.angular.z = rotationSpeed;
+        publisherObject.publish(message);
+    } else {
+        // Close this node so that all Imu messages are available for other nodes
         ros::shutdown();
     }
-
-    double orientation = Orientation::getOrientation(receivedMessage);
-    if(Orientation::isRotated(orientationBuffer, orientation)) {
-        rotations ++;
-
-        switch(rotations) {
-            case 1: 
-                isMeasuring = true;
-                break;
-            case 2:
-                isLocating = true;
-                break;
-            default:
-                rotationSpeed = 0;
-        }
-    }
-    orientationBuffer = orientation;
-
-    geometry_msgs::Twist message;
-    message.angular.z = rotationSpeed;
-    publisherObject.publish(message);
 }
 
 SensorListener::SensorListener() {
@@ -65,8 +67,6 @@ void SensorListener::listen() {
 }
 
 void SensorListener::magnetometerCallback(const sensor_msgs::MagneticField::ConstPtr& message) {
-    ros::Rate rate(LISTEN_FREQUENCY);
-
     if(isMeasuring) {
         magneticField.measure(message);
     }
@@ -74,8 +74,8 @@ void SensorListener::magnetometerCallback(const sensor_msgs::MagneticField::Cons
     if(isLocating) {
         if(magneticField.isAlligned(message)) {
             rotationSpeed = 0;
+            isMeasuring = false;
+            isLocating = false;
         }
     }
-
-    rate.sleep();
 }

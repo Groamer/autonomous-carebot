@@ -1,0 +1,4 @@
+<launch>
+	<include file="$(find turtlebot3_slam)/launch/turtlebot3_slam.launch"/>
+	<include file="$(find explore_lite)/launch/explore.launch"/>
+</launch>

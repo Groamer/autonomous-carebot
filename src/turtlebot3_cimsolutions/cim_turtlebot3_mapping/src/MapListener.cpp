@@ -1,13 +1,22 @@
 #include "MapListener.h"
 
+const static int QUEUE_SIZE = 1;
+const static std::string TOPIC = "exploreState";
+
 using namespace mapper;
 
 MapListener::MapListener() {
-    listen();
+
 }
 
 MapListener::~MapListener() {
     
+}
+
+void MapListener::listen() {
+    ros::NodeHandle nodeHandle;
+    ros::Subscriber subscriber = nodeHandle.subscribe(TOPIC, QUEUE_SIZE, callback);
+    ros::spin();
 }
 
 void MapListener::callback(const std_msgs::String::ConstPtr& message) {
@@ -15,12 +24,5 @@ void MapListener::callback(const std_msgs::String::ConstPtr& message) {
 
     if(data.compare("exploration_done") == 0) {
         MapIO::saveMap();
-	ros::shutdown();
     }
-}
-
-void MapListener::listen() {
-    ros::NodeHandle nodeHandle;
-    ros::Subscriber subscriber = nodeHandle.subscribe("exploreState", 1000, callback);
-    ros::spin();
 }
