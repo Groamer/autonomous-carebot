@@ -1,7 +1,7 @@
 <launch>
 	<arg name="runner" default="$(env TURTLEBOT3_RUNNER)" doc="runner type [simulation, physical]"/>
 
-	<include file="$(find turtlebot3_slam)/launch/turtlebot3_gmapping.launch"
+	<include file="$(find turtlebot3_slam)/launch/turtlebot3_slam.launch"
 		if="$(eval runner == 'simulation')"/>
 	<include file="$(find turtlebot3_slam)/launch/cim_turtlebot3_gmapping_physical.launch"
 		if="$(eval runner == 'physical')"/>
