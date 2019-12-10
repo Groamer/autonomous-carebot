@@ -19,11 +19,14 @@ void MapProvider::provide() {
 }
 
 void MapProvider::newMap() {
-    std::cout << "Creating new map..." << std::endl;
     system("roslaunch cim_turtlebot3_mapping cim_turtlebot3_mapping_new.launch");
 }
 
 void MapProvider::existingMap() {
-    //make robot drive to the upper right corner of the map
-    std::cout << "Loading existing map..." << std::endl;
+    std::string mapFile = MapIO::getFilePath(".yaml");
+    std::string command = "roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=" + mapFile;
+
+    system(command.c_str());
+
+    //system("roslaunch cim_turtlebot3_mapping cim_turtlebot3_mapping_existing.launch");
 }

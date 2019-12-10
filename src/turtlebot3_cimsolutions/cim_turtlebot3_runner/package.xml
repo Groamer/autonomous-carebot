@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package format="2">
-  <name>cim_turtlebot3_physical</name>
+  <name>cim_turtlebot3_runner</name>
   <version>0.0.0</version>
-  <description>The cim_turtlebot3_physical package</description>
+  <description>The cim_turtlebot3_runner package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

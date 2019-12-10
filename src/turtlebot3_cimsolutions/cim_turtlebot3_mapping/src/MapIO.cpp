@@ -56,3 +56,7 @@ std::vector<std::string> MapIO::loadMap() {
 
     return files;
 }
+
+std::string MapIO::getFilePath(std::string fileExtension) {
+    return getPath() + FILENAME + fileExtension;
+}
