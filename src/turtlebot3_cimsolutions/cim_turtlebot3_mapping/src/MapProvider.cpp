@@ -24,9 +24,8 @@ void MapProvider::newMap() {
 
 void MapProvider::existingMap() {
     std::string mapFile = MapIO::getFilePath(".yaml");
-    std::string command = "roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=" + mapFile;
 
-    system(command.c_str());
-
-    //system("roslaunch cim_turtlebot3_mapping cim_turtlebot3_mapping_existing.launch");
+    // LAUNCH CODE TO DRIVE ROBOT TO UPPER RIGHT POSITION OF THE MAP
+    //std::string command = "roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:=" + mapFile;
+    //system(command.c_str());
 }
