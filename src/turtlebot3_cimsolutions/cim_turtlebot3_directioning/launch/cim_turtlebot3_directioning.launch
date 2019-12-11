@@ -1,0 +1,3 @@
+<launch>
+	<node pkg="cim_turtlebot3_directioning" type="cim_turtlebot3_directioning" name="cim_turtlebot3_directioning" output="screen"/>
+</launch>
