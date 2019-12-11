@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+#include <string>
 #include "MapIO.h"
 
 namespace mapper {

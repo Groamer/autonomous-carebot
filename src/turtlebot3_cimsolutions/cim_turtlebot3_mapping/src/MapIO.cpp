@@ -2,8 +2,8 @@
 
 using namespace mapper;
 
-const static std::string filename = "cim_turtlebot3_mapping_map";
-const static std::string directory = "cim_turtlebot3_mapping/";
+const static std::string FILENAME = "cim_turtlebot3_mapping_map";
+const static std::string DIRECTORY = "cim_turtlebot3_mapping/";
 
 MapIO::MapIO() {
     
@@ -18,7 +18,7 @@ std::string MapIO::getPath() {
     std::string const home = std::getenv("HOME") ? std::getenv("HOME") : ".";
     std::string const ros = "/.ros/";
     
-    return home + ros + directory;
+    return home + ros + DIRECTORY;
 }
 
 void MapIO::checkDirectory() {
@@ -32,7 +32,7 @@ void MapIO::saveMap() {
 
     //Save map
     std::string saveCommand = "rosrun map_server map_saver -f " + getPath()
-        + filename;
+        + FILENAME;
     system(saveCommand.c_str());
 }
 
@@ -47,7 +47,7 @@ std::vector<std::string> MapIO::loadMap() {
         //Search files in directory
         while((ent = readdir(dir)) != NULL) {
             //Ignore unrelated files
-            if(std::string(ent->d_name).find(filename) != std::string::npos) {
+            if(std::string(ent->d_name).find(FILENAME) != std::string::npos) {
                 files.push_back(getPath() + ent->d_name);
             }
         }
@@ -55,4 +55,8 @@ std::vector<std::string> MapIO::loadMap() {
     }
 
     return files;
+}
+
+std::string MapIO::getFilePath(std::string fileExtension) {
+    return getPath() + FILENAME + fileExtension;
 }

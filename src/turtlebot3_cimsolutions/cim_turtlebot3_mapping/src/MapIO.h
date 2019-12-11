@@ -11,6 +11,7 @@ namespace mapper {
         public:
             static void saveMap();
             static std::vector<std::string> loadMap();
+            static std::string getFilePath(std::string);
 
         private:
             MapIO();
