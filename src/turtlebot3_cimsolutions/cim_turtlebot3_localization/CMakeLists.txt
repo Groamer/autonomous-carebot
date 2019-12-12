@@ -3,9 +3,11 @@ project(cim_turtlebot3_localization)
 
 find_package(catkin REQUIRED COMPONENTS
 	roscpp
-	rospy
 	std_msgs
 	genmsg
+	move_base_msgs
+	actionlib
+	tf
 )
 
 catkin_package()
