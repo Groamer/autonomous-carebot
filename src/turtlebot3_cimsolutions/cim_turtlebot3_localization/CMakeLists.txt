@@ -19,6 +19,7 @@ include_directories(
 add_executable(
 	cim_turtlebot3_localization
 	src/LocalizationApp.cpp
+	src/MapCalculator.cpp
 )
 target_link_libraries(
 	cim_turtlebot3_localization

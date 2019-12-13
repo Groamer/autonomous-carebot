@@ -9,10 +9,14 @@
 #include <nav_msgs/OccupancyGrid.h>
 #include <std_msgs/Header.h>
 
+#include "MapCalculator.h"
+
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
+using namespace localizer;
+
 static void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg){
-  int x = msg->info.width;
+  /*int x = msg->info.width;
   int y = msg->info.height;
 
   while(x > 0 || y > 0) {
@@ -21,14 +25,18 @@ static void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg){
 
     if(value == 0) {
       //vrije spot gevonden
-      //navigeer hiernaartoe
+      //converteer deze waarde naar een coordinaat waar de robot naartoe kan rijden
+      //vraag het tf transform de huidige positie van de robot op
     }
 
     x --;
     y --;
   }
 
-  std::cout << "CYKA!" << std::endl;
+  std::cout << "CYKA!" << std::endl;*/
+
+  MapCalculator map;
+  map.getFreeSpot(msg);
 }
 
 void checkerdecheck() {
@@ -48,7 +56,7 @@ int main(int argc, char** argv){
 
   checkerdecheck();
 
-  //tell the action client that we want to spin a thread by default
+  /*//tell the action client that we want to spin a thread by default
   MoveBaseClient ac("move_base", true);
 
   //wait for the action server to come up
@@ -74,7 +82,7 @@ int main(int argc, char** argv){
   if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
     ROS_INFO("Hooray, the base moved 1 meter forward");
   else
-    ROS_INFO("The base failed to move forward 1 meter for some reason");
+    ROS_INFO("The base failed to move forward 1 meter for some reason");*/
 
   return 0;
 }
