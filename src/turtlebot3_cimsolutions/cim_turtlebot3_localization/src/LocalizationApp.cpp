@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <ros/ros.h>
 #include <costmap_2d/costmap_2d.h>
 #include <geometry_msgs/Twist.h>
@@ -11,32 +12,22 @@
 
 #include "MapCalculator.h"
 
+static bool isFinding = false;
+
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
 using namespace localizer;
 
 static void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg){
-  /*int x = msg->info.width;
-  int y = msg->info.height;
+  //TIJDELIJKE CODE LELIJK WOLLAH
+  if(!isFinding) {
+    isFinding = true;
 
-  while(x > 0 || y > 0) {
-    int index = x + msg->info.width * y;
-    int value = msg->data[index];
-
-    if(value == 0) {
-      //vrije spot gevonden
-      //converteer deze waarde naar een coordinaat waar de robot naartoe kan rijden
-      //vraag het tf transform de huidige positie van de robot op
-    }
-
-    x --;
-    y --;
+    MapCalculator map;
+    std::vector<double> coordinates = map.getFreeSpot(msg);
+    std::cout << "X: " << coordinates[0] << std::endl;
+    std::cout << "Y: " << coordinates[1] << std::endl;
   }
-
-  std::cout << "CYKA!" << std::endl;*/
-
-  MapCalculator map;
-  map.getFreeSpot(msg);
 }
 
 void checkerdecheck() {
