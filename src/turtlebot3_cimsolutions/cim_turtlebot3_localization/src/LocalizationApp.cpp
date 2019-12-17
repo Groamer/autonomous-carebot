@@ -9,6 +9,7 @@
 #include <nav_msgs/MapMetaData.h>
 #include <nav_msgs/OccupancyGrid.h>
 #include <std_msgs/Header.h>
+#include <nav_msgs/Odometry.h>
 
 #include "MapCalculator.h"
 
@@ -42,10 +43,29 @@ void checkerdecheck() {
   ros::spin();
 }
 
+static void positionCallback(const nav_msgs::Odometry::ConstPtr& message) {
+  std::cout << message->pose.pose.position.x << std::endl;
+  
+}
+
+void getPosition() {
+  std::cout << "BRUH" << std::endl;
+
+  ros::NodeHandle nh;
+  ros::Subscriber sub = nh.subscribe("odom", 1, positionCallback);
+  ros::spin();
+}
+
 int main(int argc, char** argv){
   ros::init(argc, argv, "cim_turtlebot3_localization");
 
-  checkerdecheck();
+  getPosition();
+
+  double test = 0.0;
+  ros::param::get("/gmapping_min", test);
+  std::cout << test << std::endl;
+
+  //checkerdecheck();
 
   /*//tell the action client that we want to spin a thread by default
   MoveBaseClient ac("move_base", true);
