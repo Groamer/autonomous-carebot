@@ -12,88 +12,102 @@
 #include <nav_msgs/Odometry.h>
 
 #include "MapCalculator.h"
-
-static bool isFinding = false;
-
-typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
+#include "Mover.h"
+#include "CoordinateSystemConverter.h"
 
 using namespace localizer;
 
-static void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg){
-  //TIJDELIJKE CODE LELIJK WOLLAH
-  if(!isFinding) {
-    isFinding = true;
+typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-    MapCalculator map;
-    std::vector<double> coordinates = map.getFreeSpot(msg);
-    std::cout << "X: " << coordinates[0] << std::endl;
-    std::cout << "Y: " << coordinates[1] << std::endl;
+static int findIterator = 0;
+static std::vector<double> topRight;
+static MapCalculator mapCalculator;
+static Mover mover;
+
+static void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& msg) {
+  // Make sure previous update has been completed before processing a new one.
+  if(!mapCalculator.getIsUpdating()) {
+    std::vector<double> coordinates = mapCalculator.getFreeSpot(msg);
   }
 }
 
-void checkerdecheck() {
-  /*costmap_2d::Costmap2D map();
+static void odomCallback(const nav_msgs::Odometry::ConstPtr& message) {
+  Axes axesROS;
+  axesROS.x = message->pose.pose.position.x;
+  axesROS.y = message->pose.pose.position.y;
 
-  char bruh = costmap_2d::costLookUp(1, 1, 1, 1);
+  Axes axesStandard = CoordinateSystemConverter::convertROS(axesROS);
+  std::cout << "X: " << axesStandard.x << std::endl;
+  std::cout << "Y: " << axesStandard.y << std::endl;
+  std::cout << std::endl;
 
-  ROS_INFO("kek!");*/
+  mover.setGoal(0, 0, 0, 0.5);
 
-  ros::NodeHandle nh;
-  ros::Subscriber sub = nh.subscribe("map", 1, mapCallback);
-  ros::spin();
-}
+  if(!mover.getIsMoving()) {
+    /*double xPosition = message->pose.pose.position.x;
+    double yPosition = message->pose.pose.position.y;
+    std::vector<double> coordinates = mover.convertCoordinates(xPosition, yPosition);
 
-static void positionCallback(const nav_msgs::Odometry::ConstPtr& message) {
-  std::cout << message->pose.pose.position.x << std::endl;
+    std::cout << "X: " << coordinates[0] << std::endl;
+    std::cout << "Y: " << coordinates[1] << std::endl;*/
+
+    switch(findIterator) {
+      case 0:
+        //ga naar pos max
+        /*double mapMin;
+        double mapMax;
+
+        ros::param::get("/gmapping_min", mapMin);
+        ros::param::get("/gmapping_max", mapMax);*/
+
+        //mover.setGoal(coordinates[0], coordinates[1], 20, 20);
+
+        findIterator ++;
+        break;
+      case 1:
+        //ga naar eerst gevonden pos max
+        findIterator ++;
+        break;
+      case 2:
+        //ga naar pos max
+        findIterator ++;
+        break;
+      case 3:
+        //ga naar tweede gevonden pos (zou toppunt moeten zijn)
+        findIterator ++;
+        break;
+    }
+  }
+
+  /*isFinding = true;
   
+  double xPosition = message->pose.pose.position.x;
+  double yPosition = message->pose.pose.position.y;
+  
+  if(!mover.isMoving()) {
+    // Find far top right
+    mover.setGoal(0.0, 0.0)
+
+
+    mover.setGoal(xPosition, yPosition, 0.0, 20.0);
+  }*/
 }
 
-void getPosition() {
-  std::cout << "BRUH" << std::endl;
-
-  ros::NodeHandle nh;
-  ros::Subscriber sub = nh.subscribe("odom", 1, positionCallback);
+void findTopRight() {
+  ros::NodeHandle nodeHandle;
+  ros::Subscriber odomSubscriber = nodeHandle.subscribe("odom", 1, odomCallback);
+  ros::Subscriber mapSubscriber = nodeHandle.subscribe("map", 1, mapCallback);
   ros::spin();
 }
 
-int main(int argc, char** argv){
+int main(int argc, char** argv) {
   ros::init(argc, argv, "cim_turtlebot3_localization");
 
-  getPosition();
+  findTopRight();
 
   double test = 0.0;
   ros::param::get("/gmapping_min", test);
   std::cout << test << std::endl;
-
-  //checkerdecheck();
-
-  /*//tell the action client that we want to spin a thread by default
-  MoveBaseClient ac("move_base", true);
-
-  //wait for the action server to come up
-  while(!ac.waitForServer(ros::Duration(5.0))){
-    ROS_INFO("Waiting for the move_base action server to come up");
-  }
-
-  move_base_msgs::MoveBaseGoal goal;
-
-  //we'll send a goal to the robot to move 1 meter forward
-  goal.target_pose.header.frame_id = "base_link";
-  goal.target_pose.header.stamp = ros::Time::now();
-
-  goal.target_pose.pose.position.x = 20.0;
-  goal.target_pose.pose.position.y = -20.0;
-  goal.target_pose.pose.orientation.w = 1.0;
-
-  ROS_INFO("Sending goal");
-  ac.sendGoal(goal);
-
-  ac.waitForResult();
-
-  if(ac.getState() == actionlib::SimpleClientGoalState::SUCCEEDED)
-    ROS_INFO("Hooray, the base moved 1 meter forward");
-  else
-    ROS_INFO("The base failed to move forward 1 meter for some reason");*/
 
   return 0;
 }

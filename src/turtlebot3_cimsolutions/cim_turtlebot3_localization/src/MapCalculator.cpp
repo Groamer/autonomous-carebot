@@ -2,6 +2,8 @@
 
 using namespace localizer;
 
+static bool isUpdating = false;
+
 MapCalculator::MapCalculator() {
 
 }
@@ -11,6 +13,7 @@ MapCalculator::~MapCalculator() {
 }
 
 std::vector<double> MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr& message) {
+    isUpdating = true;
     const int width = message->info.width;
     const int height = message->info.height;
 
@@ -25,6 +28,7 @@ std::vector<double> MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::Co
                 if(isFreeSpot(x, y, message)) {
                     coordinates.push_back(convertToAxis(x, width, message->info.resolution));
                     coordinates.push_back(convertToAxis(y, height, message->info.resolution));
+                    isUpdating = false;
 
                     return coordinates;
                 }
@@ -32,7 +36,13 @@ std::vector<double> MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::Co
         }
     }
 
+    isUpdating = false;
+
     return coordinates;
+}
+
+bool MapCalculator::getIsUpdating() {
+    return isUpdating;
 }
 
 int MapCalculator::getPixelValue(int xPixel, int yPixel, const nav_msgs::OccupancyGrid::ConstPtr& message) {

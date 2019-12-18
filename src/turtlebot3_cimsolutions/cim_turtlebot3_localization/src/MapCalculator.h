@@ -11,6 +11,7 @@ namespace localizer {
             ~MapCalculator();
 
             std::vector<double> getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr&);
+            bool getIsUpdating();
             
         private:
             int getPixelValue(int, int, const nav_msgs::OccupancyGrid::ConstPtr&);

@@ -20,6 +20,8 @@ add_executable(
 	cim_turtlebot3_localization
 	src/LocalizationApp.cpp
 	src/MapCalculator.cpp
+	src/Mover.cpp
+	src/CoordinateSystemConverter.cpp
 )
 target_link_libraries(
 	cim_turtlebot3_localization
