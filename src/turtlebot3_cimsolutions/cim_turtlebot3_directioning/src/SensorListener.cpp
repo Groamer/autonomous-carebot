@@ -14,7 +14,7 @@ static double rotationSpeed = 0.5;
 static double orientationBuffer = 0.0;
 static MagneticField magneticField;
 
-// Publish Imu messages and listen to Twist messages
+// Publish Twist messages and listen to Imu messages
 template<>
 void PublisherSubscriber<geometry_msgs::Twist, sensor_msgs::Imu>::subscriberCallback(
         const sensor_msgs::Imu::ConstPtr& receivedMessage) {

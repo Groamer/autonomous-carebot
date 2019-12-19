@@ -1,8 +1,7 @@
 #pragma once
 
-#include <iostream>
-#include <vector>
 #include <nav_msgs/OccupancyGrid.h>
+#include "DimensionVectors.h"
 
 namespace localizer {
     class MapCalculator {
@@ -10,13 +9,13 @@ namespace localizer {
             MapCalculator();
             ~MapCalculator();
 
-            std::vector<double> getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr&);
+            Vector2D getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr&);
+            Vector2D getTopRight(const nav_msgs::OccupancyGrid::ConstPtr&);
             bool getIsUpdating();
             
         private:
             int getPixelValue(int, int, const nav_msgs::OccupancyGrid::ConstPtr&);
             bool isFreeSpot(int, int, const nav_msgs::OccupancyGrid::ConstPtr&);
-            void getCoordinates(int, int, const nav_msgs::OccupancyGrid::ConstPtr&);
             double convertToAxis(int, int, double);
             int convertToLine(double, int, double);
     };

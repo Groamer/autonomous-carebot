@@ -1,16 +1,13 @@
 #pragma once
 
 #include <vector>
+#include "DimensionVectors.h"
 
 namespace localizer {
-    struct Axes {
-        double x, y;
-    };
-
     class CoordinateSystemConverter {
         public:
-            static Axes convertROS(Axes);
-            static Axes convertStandard(Axes);
+            static Vector2D convertROSToStandard(Vector2D);
+            static Vector2D convertStandardToROS(Vector2D);
 
         private:
             CoordinateSystemConverter();

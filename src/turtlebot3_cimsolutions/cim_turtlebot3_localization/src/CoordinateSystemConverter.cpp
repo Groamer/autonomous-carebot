@@ -10,16 +10,16 @@ CoordinateSystemConverter::~CoordinateSystemConverter() {
 
 }
 
-Axes CoordinateSystemConverter::convertROS(Axes ROS) {
-    Axes standard;
+Vector2D CoordinateSystemConverter::convertROSToStandard(Vector2D ROS) {
+    Vector2D standard;
     standard.x = -ROS.y;
     standard.y = ROS.x;
 
     return standard;
 }
 
-Axes CoordinateSystemConverter::convertStandard(Axes standard) {
-    Axes ROS;
+Vector2D CoordinateSystemConverter::convertStandardToROS(Vector2D standard) {
+    Vector2D ROS;
     ROS.x = standard.y;
     ROS.y = -standard.x;
 

@@ -14,18 +14,18 @@ Mover::~Mover() {
 
 }
 
-// Move to an absolute position on the X and Y axis.
-void Mover::setGoal(double xPosition, double yPosition, double xGoal, double yGoal) {
+// Move to a position on the X and Y axis.
+void Mover::moveToPosition(Vector2D start, Vector2D goal) {
     isMoving = true;
     // Tell the action client that we want to spin a thread by default.
     MoveBaseClient moveClient("move_base", true);
     // Wait for the action server to come up.
-    while(!moveClient.waitForServer(ros::Duration(1.0))){
+    while(!moveClient.waitForServer(ros::Duration(1.0))) {
 
     }
-    std::vector<double> translation = calculateTranslation(xPosition, yPosition, xGoal, yGoal);
-    Axes axesStandard = {translation[0], translation[1]};
-    Axes axesROS = CoordinateSystemConverter::convertStandard(axesStandard);
+
+    Vector2D translation = getTranslation(start, goal);
+    Vector2D axesROS = CoordinateSystemConverter::convertStandardToROS(translation);
 
     move_base_msgs::MoveBaseGoal moveGoal;
     moveGoal.target_pose.header.frame_id = "base_link";
@@ -38,10 +38,10 @@ void Mover::setGoal(double xPosition, double yPosition, double xGoal, double yGo
     moveClient.waitForResult();
 
     if(moveClient.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
-        isMoving = false;
-    } else {
-        isMoving = false;
+        // Could be expanded in the future.
     }
+
+    isMoving = false;
 }
 
 bool Mover::getIsMoving() {
@@ -49,16 +49,15 @@ bool Mover::getIsMoving() {
 }
 
 // Calculate moving goal's relative coordinates for moving the robot.
-std::vector<double> Mover::calculateTranslation(double xPosition, double yPosition, double xGoal, double yGoal) {
-    const double xDelta = xGoal - xPosition;
-    const double yDelta = yGoal - yPosition;
-
-    const double xTranslation = xPosition + xDelta;
-    const double yTranslation = yPosition + yDelta;
-
-    std::vector<double> translation;
-    translation.push_back(xDelta);
-    translation.push_back(yDelta);
+Vector2D Mover::getTranslation(Vector2D start, Vector2D goal) {
+    Vector2D translation;
+    translation.x = goal.x - start.x;
+    translation.y = goal.y - start.y;
 
     return translation;
+}
+
+// Calculate map's offset relative to the robot's starting position.
+Vector2D Mover::getMapOffset(Vector2D start, Vector2D topRight) {
+    
 }

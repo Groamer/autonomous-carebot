@@ -12,12 +12,12 @@ MapCalculator::~MapCalculator() {
 
 }
 
-std::vector<double> MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr& message) {
+Vector2D MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr& message) {
     isUpdating = true;
     const int width = message->info.width;
     const int height = message->info.height;
 
-    std::vector<double> coordinates;
+    Vector2D coordinates;
 
     // Iterate over Y-axis from top to bottom
     for(int y = height - 1; y >= 0; y --) {
@@ -26,8 +26,8 @@ std::vector<double> MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::Co
             // Get pixel value at given index
             if(getPixelValue(x, y, message) == 0) {
                 if(isFreeSpot(x, y, message)) {
-                    coordinates.push_back(convertToAxis(x, width, message->info.resolution));
-                    coordinates.push_back(convertToAxis(y, height, message->info.resolution));
+                    coordinates.x = (convertToAxis(x, width, message->info.resolution));
+                    coordinates.y = (convertToAxis(y, height, message->info.resolution));
                     isUpdating = false;
 
                     return coordinates;
@@ -41,6 +41,22 @@ std::vector<double> MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::Co
     return coordinates;
 }
 
+Vector2D MapCalculator::getTopRight(const nav_msgs::OccupancyGrid::ConstPtr& message) {
+    const int horizontalPixels = message->info.width;
+    const int verticalPixels = message->info.height;
+    // Amount of pixels per meter
+    const int ppm = ceil((double)1 / message->info.resolution);
+
+    const double x = (double)horizontalPixels / (double)ppm / (double)2;
+    const double y = (double)verticalPixels / (double)ppm / (double)2;
+
+    Vector2D topRight;
+    topRight.x = x;
+    topRight.y = y;
+
+    return topRight;
+}
+
 bool MapCalculator::getIsUpdating() {
     return isUpdating;
 }
@@ -48,6 +64,7 @@ bool MapCalculator::getIsUpdating() {
 int MapCalculator::getPixelValue(int xPixel, int yPixel, const nav_msgs::OccupancyGrid::ConstPtr& message) {
     const int width = message->info.width;
     const int index = xPixel + width * yPixel;
+
     return message->data[index];
 }
 
@@ -67,10 +84,6 @@ bool MapCalculator::isFreeSpot(int xPixel, int yPixel, const nav_msgs::Occupancy
     }
 
     return true;
-}
-
-void MapCalculator::getCoordinates(int x, int y, const nav_msgs::OccupancyGrid::ConstPtr& message) {
-    
 }
 
 double MapCalculator::convertToAxis(int curPixel, int maxPixel, double resolution) {
