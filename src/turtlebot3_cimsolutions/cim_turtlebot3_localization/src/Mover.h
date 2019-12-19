@@ -18,8 +18,8 @@ namespace localizer {
             bool getIsMoving();
 
         private:
-            std::vector<double> calculateTranslation(double, double, double, double);
             Vector2D getTranslation(Vector2D, Vector2D);
+            //Vector2D getMaxTranslation(Vector2D, Vector2D, Vector2D)
             Vector2D getMapOffset(Vector2D, Vector2D);
     };
 }

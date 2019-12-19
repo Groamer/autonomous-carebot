@@ -27,6 +27,12 @@ void Mover::moveToPosition(Vector2D start, Vector2D goal) {
     Vector2D translation = getTranslation(start, goal);
     Vector2D axesROS = CoordinateSystemConverter::convertStandardToROS(translation);
 
+    Vector2D goalROSTEMP = CoordinateSystemConverter::convertStandardToROS(goal);
+    std::cout << "ROSGOAL X" << goalROSTEMP.x << std::endl;
+    std::cout << "ROSGOAL Y" << goalROSTEMP.y << std::endl;
+    std::cout << std::endl;
+
+
     move_base_msgs::MoveBaseGoal moveGoal;
     moveGoal.target_pose.header.frame_id = "base_link";
     moveGoal.target_pose.header.stamp = ros::Time::now();

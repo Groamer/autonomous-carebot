@@ -44,7 +44,7 @@ void Localizator::mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& message) 
 }
 
 void Localizator::odomCallback(const nav_msgs::Odometry::ConstPtr& message) {
-  if(!foundTopRight && !mover.getIsMoving() && isSet(topRight)) {
+  /*if(!foundTopRight && !mover.getIsMoving() && isSet(topRight)) {
     Vector2D axesROS = {message->pose.pose.position.x, message->pose.pose.position.y};
     Vector2D current = CoordinateSystemConverter::convertROSToStandard(axesROS);
 
@@ -60,7 +60,14 @@ void Localizator::odomCallback(const nav_msgs::Odometry::ConstPtr& message) {
     std::cout << "DRIVING TO TOP RIGHT" << std::endl;
     mover.moveToPosition(current, freeSpot);
     foundFreeSpot = true;
-  }
+  }*/
+
+  /*
+  NIEUWE OPLOSSING:
+  LAAT DE ROBOT STEEDS 5 OMHOOG EN 5 NAAR RECHTS RIJDEN
+  VERGELIJK DAN DE NIEUWE FREESPOT
+  INDIEN DE FREESPOT NIET MEER VERANDERT WEET JE DAT DE TOP IS BEREIKT
+  */
 }
 
 // Get top right of map with a small error margin.
