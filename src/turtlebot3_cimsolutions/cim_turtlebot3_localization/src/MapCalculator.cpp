@@ -2,8 +2,6 @@
 
 using namespace localizer;
 
-static bool isUpdating = false;
-
 MapCalculator::MapCalculator() {
 
 }
@@ -13,7 +11,6 @@ MapCalculator::~MapCalculator() {
 }
 
 Vector2D MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr& message) {
-    isUpdating = true;
     const int width = message->info.width;
     const int height = message->info.height;
 
@@ -28,15 +25,12 @@ Vector2D MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr& mes
                 if(isFreeSpot(x, y, message)) {
                     coordinates.x = (convertToAxis(x, width, message->info.resolution));
                     coordinates.y = (convertToAxis(y, height, message->info.resolution));
-                    isUpdating = false;
 
                     return coordinates;
                 }
             }
         }
     }
-
-    isUpdating = false;
 
     return coordinates;
 }
@@ -55,10 +49,6 @@ Vector2D MapCalculator::getTopRight(const nav_msgs::OccupancyGrid::ConstPtr& mes
     topRight.y = y;
 
     return topRight;
-}
-
-bool MapCalculator::getIsUpdating() {
-    return isUpdating;
 }
 
 int MapCalculator::getPixelValue(int xPixel, int yPixel, const nav_msgs::OccupancyGrid::ConstPtr& message) {

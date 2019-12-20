@@ -14,8 +14,8 @@ Mover::~Mover() {
 
 }
 
-// Move to a position on the X and Y axis.
-void Mover::moveToPosition(Vector2D start, Vector2D goal) {
+// Move to an absolute position on the X and Y axis.
+void Mover::moveAbsolute(Vector2D start, Vector2D goal) {
     isMoving = true;
     // Tell the action client that we want to spin a thread by default.
     MoveBaseClient moveClient("move_base", true);
@@ -26,12 +26,6 @@ void Mover::moveToPosition(Vector2D start, Vector2D goal) {
 
     Vector2D translation = getTranslation(start, goal);
     Vector2D axesROS = CoordinateSystemConverter::convertStandardToROS(translation);
-
-    Vector2D goalROSTEMP = CoordinateSystemConverter::convertStandardToROS(goal);
-    std::cout << "ROSGOAL X" << goalROSTEMP.x << std::endl;
-    std::cout << "ROSGOAL Y" << goalROSTEMP.y << std::endl;
-    std::cout << std::endl;
-
 
     move_base_msgs::MoveBaseGoal moveGoal;
     moveGoal.target_pose.header.frame_id = "base_link";
@@ -50,6 +44,12 @@ void Mover::moveToPosition(Vector2D start, Vector2D goal) {
     isMoving = false;
 }
 
+// Move to a position relative to the robot's position.
+void Mover::moveRelative(Vector2D goal) {
+    Vector2D start = {0.0, 0.0};
+    moveAbsolute(start, goal);
+}
+
 bool Mover::getIsMoving() {
     return isMoving;
 }
@@ -61,9 +61,4 @@ Vector2D Mover::getTranslation(Vector2D start, Vector2D goal) {
     translation.y = goal.y - start.y;
 
     return translation;
-}
-
-// Calculate map's offset relative to the robot's starting position.
-Vector2D Mover::getMapOffset(Vector2D start, Vector2D topRight) {
-    
 }

@@ -25,8 +25,6 @@ namespace localizer {
 
             static void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr&);
             static void odomCallback(const nav_msgs::Odometry::ConstPtr&);
-            static Vector2D getTopRight(const nav_msgs::OccupancyGrid::ConstPtr&);
-            static bool isSet(Vector2D);
-            static bool isSame(Vector2D, Vector2D);
+            static bool compareVector2D(Vector2D, Vector2D);
     };
 }

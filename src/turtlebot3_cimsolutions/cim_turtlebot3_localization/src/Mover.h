@@ -14,12 +14,12 @@ namespace localizer {
             Mover();
             ~Mover();
 
-            void moveToPosition(Vector2D, Vector2D);
+            void moveAbsolute(Vector2D, Vector2D);
+            void moveRelative(Vector2D);
             bool getIsMoving();
 
         private:
             Vector2D getTranslation(Vector2D, Vector2D);
-            //Vector2D getMaxTranslation(Vector2D, Vector2D, Vector2D)
             Vector2D getMapOffset(Vector2D, Vector2D);
     };
 }
