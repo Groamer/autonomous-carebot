@@ -1,10 +1,8 @@
 #pragma once
-
 #include <vector>
 #include <ros/ros.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <actionlib/client/simple_action_client.h>
-
 #include "DimensionVectors.h"
 #include "CoordinateSystemConverter.h"
 
@@ -20,6 +18,5 @@ namespace localizer {
 
         private:
             Vector2D getTranslation(Vector2D, Vector2D);
-            Vector2D getMapOffset(Vector2D, Vector2D);
     };
 }

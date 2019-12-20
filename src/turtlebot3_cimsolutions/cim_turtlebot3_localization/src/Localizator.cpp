@@ -19,8 +19,8 @@ Localizator::~Localizator() {
 
 void Localizator::locate() {
   ros::NodeHandle nodeHandle;
-  ros::Subscriber odomSubscriber = nodeHandle.subscribe("odom", 1, odomCallback);
   ros::Subscriber mapSubscriber = nodeHandle.subscribe("map", 1, mapCallback);
+  ros::Subscriber odomSubscriber = nodeHandle.subscribe("odom", 1, odomCallback);
   ros::spin();
 }
 
@@ -37,6 +37,9 @@ void Localizator::mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& message) 
 
     freeSpot = mapCalculator.getFreeSpot(message);
  }
+
+  ros::Rate rate(10);
+  rate.sleep();
 }
 
 void Localizator::odomCallback(const nav_msgs::Odometry::ConstPtr& message) {
@@ -44,24 +47,36 @@ void Localizator::odomCallback(const nav_msgs::Odometry::ConstPtr& message) {
     Vector2D axesROS = {message->pose.pose.position.x, message->pose.pose.position.y};
     Vector2D current = CoordinateSystemConverter::convertROSToStandard(axesROS);
 
-    std::cout << "freespotx: " << freeSpot.x << std::endl;
-    std::cout << "freespoty: " << freeSpot.y << std::endl;
-
-    mover.moveAbsolute(current, freeSpot);
+    if(!isPositioned(current)) {
+      mover.moveAbsolute(current, freeSpot);
+    } else {
+      // OPEN EXISTING MAP AND FIND TOPRIGHT SPOT THERE
+      // THEN SET COORDINATES AND RELOAD GMAPPING BLYAT
+    }  
   }
 
-  /*
-  NIEUWE OPLOSSING:
-  LAAT DE ROBOT STEEDS 5 OMHOOG EN 5 NAAR RECHTS RIJDEN
-  VERGELIJK DAN DE NIEUWE FREESPOT
-  INDIEN DE FREESPOT NIET MEER VERANDERT WEET JE DAT DE TOP IS BEREIKT
-  */
+  ros::Rate rate(10);
+  rate.sleep();
 }
 
 // Compare two Vector2D objects.
 bool Localizator::compareVector2D(Vector2D vectorA, Vector2D vectorB) {
   if(vectorA.x == vectorB.x && vectorA.y == vectorB.y) {
     return true;
+  }
+
+  return false;
+}
+
+// Check if robot is in calculated free spot.
+bool Localizator::isPositioned(Vector2D position) {
+  // Set tolerance to 10 cm.
+  const double tolerance = 0.01;
+
+  if(freeSpot.x > (position.x - tolerance) && freeSpot.x < (position.x + tolerance)) {
+    if(freeSpot.y > (position.y - tolerance) && freeSpot.y < (position.y + tolerance)) {
+      return true;
+    }
   }
 
   return false;

@@ -35,22 +35,6 @@ Vector2D MapCalculator::getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr& mes
     return coordinates;
 }
 
-Vector2D MapCalculator::getTopRight(const nav_msgs::OccupancyGrid::ConstPtr& message) {
-    const int horizontalPixels = message->info.width;
-    const int verticalPixels = message->info.height;
-    // Amount of pixels per meter
-    const int ppm = ceil((double)1 / message->info.resolution);
-
-    const double x = (double)horizontalPixels / (double)ppm / (double)2;
-    const double y = (double)verticalPixels / (double)ppm / (double)2;
-
-    Vector2D topRight;
-    topRight.x = x;
-    topRight.y = y;
-
-    return topRight;
-}
-
 int MapCalculator::getPixelValue(int xPixel, int yPixel, const nav_msgs::OccupancyGrid::ConstPtr& message) {
     const int width = message->info.width;
     const int index = xPixel + width * yPixel;

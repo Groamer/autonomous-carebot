@@ -25,13 +25,11 @@ void Mover::moveAbsolute(Vector2D start, Vector2D goal) {
     }
 
     Vector2D translation = getTranslation(start, goal);
-    Vector2D axesROS = CoordinateSystemConverter::convertStandardToROS(translation);
-
     move_base_msgs::MoveBaseGoal moveGoal;
     moveGoal.target_pose.header.frame_id = "base_link";
     moveGoal.target_pose.header.stamp = ros::Time::now();
-    moveGoal.target_pose.pose.position.x = axesROS.x;
-    moveGoal.target_pose.pose.position.y = axesROS.y;
+    moveGoal.target_pose.pose.position.x = translation.x;
+    moveGoal.target_pose.pose.position.y = translation.y;
     moveGoal.target_pose.pose.orientation.w = 1.0;
 
     moveClient.sendGoal(moveGoal);
@@ -56,9 +54,12 @@ bool Mover::getIsMoving() {
 
 // Calculate moving goal's relative coordinates for moving the robot.
 Vector2D Mover::getTranslation(Vector2D start, Vector2D goal) {
+    Vector2D startROS = CoordinateSystemConverter::convertStandardToROS(start);
+    Vector2D goalROS = CoordinateSystemConverter::convertStandardToROS(goal);
+
     Vector2D translation;
-    translation.x = goal.x - start.x;
-    translation.y = goal.y - start.y;
+    translation.x = goalROS.x - startROS.x;
+    translation.y = goalROS.y - startROS.y;
 
     return translation;
 }

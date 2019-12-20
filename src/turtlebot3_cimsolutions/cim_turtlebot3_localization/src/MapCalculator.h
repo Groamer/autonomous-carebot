@@ -1,5 +1,4 @@
 #pragma once
-
 #include <nav_msgs/OccupancyGrid.h>
 #include "DimensionVectors.h"
 
@@ -10,7 +9,6 @@ namespace localizer {
             ~MapCalculator();
 
             Vector2D getFreeSpot(const nav_msgs::OccupancyGrid::ConstPtr&);
-            Vector2D getTopRight(const nav_msgs::OccupancyGrid::ConstPtr&);
             
         private:
             int getPixelValue(int, int, const nav_msgs::OccupancyGrid::ConstPtr&);
