@@ -8,9 +8,6 @@
 #include "DimensionVectors.h"
 #include "CoordinateSystemConverter.h"
 
-//TEMP
-#include <iostream>
-
 namespace localizer {
     class Localizator {
         public:
