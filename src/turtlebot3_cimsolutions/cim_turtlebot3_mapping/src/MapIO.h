@@ -5,6 +5,8 @@
 #include <string>
 #include <vector>
 #include <cstdlib>
+#include <fstream>
+#include <iostream>
 
 namespace mapper {
     class MapIO {

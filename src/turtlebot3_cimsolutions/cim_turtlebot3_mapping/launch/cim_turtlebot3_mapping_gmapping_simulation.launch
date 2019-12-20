@@ -5,6 +5,11 @@
 	<arg name="set_base_frame" default="base_footprint"/>
 	<arg name="set_odom_frame" default="odom"/>
 	<arg name="set_map_frame"  default="map"/>
+	<arg name="gmapping_radius" value="10.0"/>
+
+	<!-- Global parameters -->
+	<param name="gmapping_min" value="-$(arg gmapping_radius)"/>
+	<param name="gmapping_max" value="$(arg gmapping_radius)"/>
 
 	<!-- Gmapping -->
 	<node pkg="gmapping" type="slam_gmapping" name="turtlebot3_slam_gmapping" output="screen">
@@ -31,12 +36,12 @@
 		<param name="angularUpdate" value="0.2"/>
 		<param name="temporalUpdate" value="0.2"/>
 		<param name="resampleThreshold" value="0.5"/>
-		<param name="particles" value="50"/>
-		<param name="xmin" value="-10.0"/>
-		<param name="ymin" value="-10.0"/>
-		<param name="xmax" value="10.0"/>
-		<param name="ymax" value="10.0"/>
-		<param name="delta" value="0.05"/>
+		<param name="particles" value="30"/>
+		<param name="xmin" value="-$(arg gmapping_radius)"/>
+		<param name="xmax" value="$(arg gmapping_radius)"/>
+		<param name="ymin" value="-$(arg gmapping_radius)"/>
+		<param name="ymax" value="$(arg gmapping_radius)"/>
+		<param name="delta" value="0.02"/>
 		<param name="llsamplerange" value="0.01"/>
 		<param name="llsamplestep" value="0.01"/>
 		<param name="lasamplerange" value="0.005"/>
