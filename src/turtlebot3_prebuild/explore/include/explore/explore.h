@@ -47,7 +47,7 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <ros/ros.h>
-#include <std_msgs/String.h>
+#include <std_msgs/Bool.h>
 #include <visualization_msgs/MarkerArray.h>
 
 #include <explore/costmap_client.h>

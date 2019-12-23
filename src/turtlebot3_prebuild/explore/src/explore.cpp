@@ -300,16 +300,14 @@ void Explore::stop()
 void Explore::initExploreState()
 {
   exploreState_publisher_ =
-    exploreState_nh_.advertise<std_msgs::String>("exploreState", 1000);
+    exploreState_nh_.advertise<std_msgs::Bool>("cim_turtlebot3_mapping_hasExplored", 1);
 }
 
 // CUSTOM CODE TO PUBLISH EXPLORE STATE
 void Explore::publishExploreState()
 {
-  std_msgs::String message;
-  std::stringstream stringStream;
-  stringStream << "exploration_done";
-  message.data = stringStream.str();
+  std_msgs::Bool message;
+  message.data = true;
 
   exploreState_publisher_.publish(message);
 }

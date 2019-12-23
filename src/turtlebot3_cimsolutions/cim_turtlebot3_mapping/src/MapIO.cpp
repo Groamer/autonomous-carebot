@@ -13,50 +13,52 @@ MapIO::~MapIO() {
 
 }
 
-std::string MapIO::getPath() {
-    //Get absolute path to user directory
+std::string MapIO::getFolderPath() {
+    // Get absolute path to user directory.
     std::string const home = std::getenv("HOME") ? std::getenv("HOME") : ".";
     std::string const ros = "/.ros/";
     
     return home + ros + DIRECTORY;
 }
 
+std::string MapIO::getFilePath() {
+    return getFolderPath() + FILENAME;
+}
+
+// Create directory if it does not exist already.
 void MapIO::checkDirectory() {
-    //Create directory if it does not already exist
-    std::string directoryCommand = "mkdir -p " + getPath();
+    std::string directoryCommand = "mkdir -p " + getFolderPath();
     system(directoryCommand.c_str());
 }
 
 void MapIO::saveMap() {
     checkDirectory();
 
-    //Save map
-    std::string saveCommand = "rosrun map_server map_saver -f " + getPath()
+    std::string saveCommand = "rosrun map_server map_saver -f " + getFolderPath()
         + FILENAME;
     system(saveCommand.c_str());
 }
 
-std::vector<std::string> MapIO::loadMap() {
-    std::vector<std::string> files;
+// Load map file with .yaml file extension.
+std::string MapIO::loadMap() {
+    const std::string fileExtension = ".yaml";
+    std::string mapFile;
 
     checkDirectory();
 
+    // Check if files are present in preconfigured path.
     DIR *dir;
     struct dirent *ent;
-    if((dir = opendir(getPath().data())) != NULL) {
-        //Search files in directory
+    if((dir = opendir(getFolderPath().data())) != NULL) {
+        // Search files in directory.
         while((ent = readdir(dir)) != NULL) {
-            //Ignore unrelated files
-            if(std::string(ent->d_name).find(FILENAME) != std::string::npos) {
-                files.push_back(getPath() + ent->d_name);
+            // Check if map file is present.
+            if(std::string(ent->d_name).find(FILENAME + fileExtension) != std::string::npos) {
+                mapFile = getFilePath() + fileExtension;
             }
         }
         closedir(dir);
     }
 
-    return files;
-}
-
-std::string MapIO::getFilePath(std::string fileExtension) {
-    return getPath() + FILENAME + fileExtension;
+    return mapFile;
 }

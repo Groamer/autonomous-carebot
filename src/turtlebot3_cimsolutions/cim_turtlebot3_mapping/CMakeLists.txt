@@ -14,6 +14,7 @@ include_directories(
 	include ${catkin_INCLUDE_DIRS}
 )
 
+#Listener
 add_executable(
 	cim_turtlebot3_mapping_listener
 	src/ListenerApp.cpp
@@ -29,17 +30,33 @@ add_dependencies(
 	cim_turtlebot3_mapping_listener_cpp
 )
 
+#Publisher
 add_executable(
-	cim_turtlebot3_mapping_provider
-	src/ProviderApp.cpp
-	src/MapProvider.cpp
+	cim_turtlebot3_mapping_publisher
+	src/PublisherApp.cpp
+	src/MapPublisher.cpp
 	src/MapIO.cpp
 )
 target_link_libraries(
-	cim_turtlebot3_mapping_provider
+	cim_turtlebot3_mapping_publisher
 	${catkin_LIBRARIES}
 )
 add_dependencies(
-	cim_turtlebot3_mapping_provider
-	cim_turtlebot3_mapping_provider_cpp
+	cim_turtlebot3_mapping_publisher
+	cim_turtlebot3_mapping_publisher_cpp
+)
+
+#Launcher
+add_executable(
+	cim_turtlebot3_mapping_launcher
+	src/LauncherApp.cpp
+	src/MapLauncher.cpp
+)
+target_link_libraries(
+	cim_turtlebot3_mapping_launcher
+	${catkin_LIBRARIES}
+)
+add_dependencies(
+	cim_turtlebot3_mapping_launcher
+	cim_turtlebot3_mapping_launcher_cpp
 )

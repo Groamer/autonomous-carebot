@@ -1,5 +1,9 @@
 #include "Localizator.h"
 
+//TEST
+#include <iostream>
+//END
+
 using namespace localizer;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
@@ -55,7 +59,7 @@ void Localizator::odomCallback(const nav_msgs::Odometry::ConstPtr& message) {
     }  
   }
 
-  ros::Rate rate(10);
+  ros::Rate rate(1);
   rate.sleep();
 }
 
@@ -70,11 +74,11 @@ bool Localizator::compareVector2D(Vector2D vectorA, Vector2D vectorB) {
 
 // Check if robot is in calculated free spot.
 bool Localizator::isPositioned(Vector2D position) {
-  // Set tolerance to 10 cm.
-  const double tolerance = 0.01;
+  // Sensor error tolerance in meters.
+  const double tolerance = 0.1;
 
-  if(freeSpot.x > (position.x - tolerance) && freeSpot.x < (position.x + tolerance)) {
-    if(freeSpot.y > (position.y - tolerance) && freeSpot.y < (position.y + tolerance)) {
+  if((freeSpot.x + tolerance) > position.x && (freeSpot.x - tolerance) < position.x) {
+    if((freeSpot.y + tolerance) > position.y && (freeSpot.y - tolerance) < position.y) {
       return true;
     }
   }

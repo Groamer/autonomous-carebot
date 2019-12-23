@@ -12,14 +12,14 @@ namespace mapper {
     class MapIO {
         public:
             static void saveMap();
-            static std::vector<std::string> loadMap();
-            static std::string getFilePath(std::string);
+            static std::string loadMap();
 
         private:
             MapIO();
             ~MapIO();
 
-            static std::string getPath();
+            static std::string getFolderPath();
+            static std::string getFilePath();
             static void checkDirectory();
     };
 }
