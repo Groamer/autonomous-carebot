@@ -2,7 +2,7 @@
 
 #include <string>
 #include <ros/ros.h>
-#include <std_msgs/String.h>
+#include <std_msgs/Bool.h>
 #include "MapIO.h"
 
 
@@ -15,6 +15,6 @@ namespace mapper {
             MapListener();
             ~MapListener();
             
-            static void callback(const std_msgs::String::ConstPtr&);
+            static void callback(const std_msgs::Bool::ConstPtr&);
     };
 }
