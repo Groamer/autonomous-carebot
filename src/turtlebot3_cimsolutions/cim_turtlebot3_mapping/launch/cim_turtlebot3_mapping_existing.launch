@@ -21,4 +21,7 @@
 		<node pkg="rviz" type="rviz" name="rviz" required="true"
 	  		args="-d $(find turtlebot3_slam)/rviz/turtlebot3_gmapping.rviz"/>
 	</group>
+
+	<!-- Localize robot -->
+	<include file="$(find cim_turtlebot3_localization)/launch/cim_turtlebot3_localization.launch"/>
 </launch>

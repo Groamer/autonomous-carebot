@@ -1,10 +1,8 @@
 #pragma once
-
 #include <string>
 #include <ros/ros.h>
 #include <std_msgs/Bool.h>
 #include "MapIO.h"
-
 
 namespace mapper {
     class MapListener {

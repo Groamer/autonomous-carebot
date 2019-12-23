@@ -1,4 +1,5 @@
 <launch>
-	<node pkg="cim_turtlebot3_mapping" type="cim_turtlebot3_mapping_provider" name="cim_turtlebot3_mapping_provider" output="screen"/>
+	<node pkg="cim_turtlebot3_mapping" type="cim_turtlebot3_mapping_publisher" name="cim_turtlebot3_mapping_publisher" output="screen"/>
 	<node pkg="cim_turtlebot3_mapping" type="cim_turtlebot3_mapping_listener" name="cim_turtlebot3_mapping_listener" output="screen"/>
+	<node pkg="cim_turtlebot3_mapping" type="cim_turtlebot3_mapping_launcher" name="cim_turtlebot3_mapping_launcher" output="screen"/>
 </launch>

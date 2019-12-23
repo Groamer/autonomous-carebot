@@ -1,11 +1,11 @@
 #include "MapListener.h"
 
-// Frequency in Herz.
-const static int LISTEN_FREQUENCY = 1;
-const static int QUEUE_SIZE = 1;
-const static std::string TOPIC = "cim_turtlebot3_mapping_hasExplored";
-
 using namespace mapper;
+
+// Frequency in Herz.
+const static int FREQUENCY = 1;
+const static int QUEUE = 1;
+const static std::string TOPIC = "cim_turtlebot3_mapping_hasExplored";
 
 MapListener::MapListener() {
 
@@ -17,7 +17,7 @@ MapListener::~MapListener() {
 
 void MapListener::listen() {
     ros::NodeHandle nodeHandle;
-    ros::Subscriber subscriber = nodeHandle.subscribe(TOPIC, QUEUE_SIZE, callback);
+    ros::Subscriber subscriber = nodeHandle.subscribe(TOPIC, QUEUE, callback);
     ros::spin();
 }
 
@@ -26,6 +26,6 @@ void MapListener::callback(const std_msgs::Bool::ConstPtr& message) {
         MapIO::saveMap();
     }
 
-    ros::Rate rate(LISTEN_FREQUENCY);
+    ros::Rate rate(FREQUENCY);
     rate.sleep();
 }
