@@ -6,5 +6,9 @@ int main(int argc, char** argv) {
 
   localizer::Localizator::locate();
 
+  // launch amcl with saved map
+  // scan saved map for free spot
+  // set free spot as starting position
+
   return 0;
 }

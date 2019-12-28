@@ -48,10 +48,6 @@ void Mover::moveRelative(Vector2D goal) {
     moveAbsolute(start, goal);
 }
 
-bool Mover::getIsMoving() {
-    return isMoving;
-}
-
 // Calculate moving goal's relative coordinates for moving the robot.
 Vector2D Mover::getTranslation(Vector2D start, Vector2D goal) {
     Vector2D startROS = CoordinateSystemConverter::convertStandardToROS(start);

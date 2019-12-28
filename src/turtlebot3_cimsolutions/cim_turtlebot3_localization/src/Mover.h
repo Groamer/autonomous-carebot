@@ -14,7 +14,6 @@ namespace localizer {
 
             void moveAbsolute(Vector2D, Vector2D);
             void moveRelative(Vector2D);
-            bool getIsMoving();
 
         private:
             Vector2D getTranslation(Vector2D, Vector2D);

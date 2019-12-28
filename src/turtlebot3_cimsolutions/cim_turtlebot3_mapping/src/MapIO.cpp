@@ -2,7 +2,8 @@
 
 using namespace mapper;
 
-const static std::string FILENAME = "cim_turtlebot3_mapping_map";
+const static std::string FILE_EXTENSION = ".yaml";
+const static std::string FILE_NAME = "cim_turtlebot3_mapping_map";
 const static std::string DIRECTORY = "cim_turtlebot3_mapping/";
 
 MapIO::MapIO() {
@@ -22,7 +23,7 @@ std::string MapIO::getFolderPath() {
 }
 
 std::string MapIO::getFilePath() {
-    return getFolderPath() + FILENAME;
+    return getFolderPath() + FILE_NAME;
 }
 
 // Create directory if it does not exist already.
@@ -35,13 +36,12 @@ void MapIO::saveMap() {
     checkDirectory();
 
     std::string saveCommand = "rosrun map_server map_saver -f " + getFolderPath()
-        + FILENAME;
+        + FILE_NAME;
     system(saveCommand.c_str());
 }
 
-// Load map file with .yaml file extension.
+// Load map file with file extension.
 std::string MapIO::loadMap() {
-    const std::string fileExtension = ".yaml";
     std::string mapFile;
 
     checkDirectory();
@@ -53,8 +53,8 @@ std::string MapIO::loadMap() {
         // Search files in directory.
         while((ent = readdir(dir)) != NULL) {
             // Check if map file is present.
-            if(std::string(ent->d_name).find(FILENAME + fileExtension) != std::string::npos) {
-                mapFile = getFilePath() + fileExtension;
+            if(std::string(ent->d_name).find(FILE_NAME + FILE_EXTENSION) != std::string::npos) {
+                mapFile = getFilePath() + FILE_EXTENSION;
             }
         }
         closedir(dir);

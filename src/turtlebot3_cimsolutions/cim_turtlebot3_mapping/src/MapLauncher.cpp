@@ -23,9 +23,11 @@ void MapLauncher::launch() {
 
 void MapLauncher::callback(const std_msgs::String::ConstPtr& message) {
     if(hasMap(message)) {
-        // A map exists, so find robot's relative position to the map.
+	ros::shutdown();
+        // A map exists, so find robot's position in the map.
         system("roslaunch cim_turtlebot3_mapping cim_turtlebot3_mapping_existing.launch");
     } else {
+	ros::shutdown();
         // No map exists, so create a new one.
         system("roslaunch cim_turtlebot3_mapping cim_turtlebot3_mapping_new.launch");
     }

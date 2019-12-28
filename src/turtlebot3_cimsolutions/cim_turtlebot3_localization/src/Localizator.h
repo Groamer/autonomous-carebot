@@ -1,5 +1,8 @@
 #pragma once
+#include <iostream>
+#include <sstream>
 #include <ros/ros.h>
+#include <std_msgs/String.h>
 #include <move_base_msgs/MoveBaseAction.h>
 #include <nav_msgs/Odometry.h>
 #include <nav_msgs/OccupancyGrid.h>
@@ -18,8 +21,10 @@ namespace localizer {
             ~Localizator();
 
             static void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr&);
+            static void mapFileCallback(const std_msgs::String::ConstPtr&);
             static void odomCallback(const nav_msgs::Odometry::ConstPtr&);
-            static bool compareVector2D(Vector2D, Vector2D);
+            static void setPosition(Vector2D);
+            static bool compareFreeSpot(Vector2D, Vector2D);
             static bool isPositioned(Vector2D);
     };
 }

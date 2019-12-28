@@ -45,7 +45,7 @@ int MapCalculator::getPixelValue(int xPixel, int yPixel, const nav_msgs::Occupan
 bool MapCalculator::isFreeSpot(int xPixel, int yPixel, const nav_msgs::OccupancyGrid::ConstPtr& message) {
     // Amount of pixels per meter
     const int ppm = ceil((double)1 / message->info.resolution);
-    const int radius = ceil(ppm / (double)2);
+    const int radius = ceil(ppm / 2.5);
 
     // Iterate over Y-axis within radius
     for(double y = yPixel + radius; y >= yPixel - radius; y --) {
