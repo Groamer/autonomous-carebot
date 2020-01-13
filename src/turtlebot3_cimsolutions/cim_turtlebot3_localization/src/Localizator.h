@@ -25,6 +25,6 @@ namespace localizer {
             static void odomCallback(const nav_msgs::Odometry::ConstPtr&);
             static void setPosition(Vector2D);
             static bool compareFreeSpot(Vector2D, Vector2D);
-            static bool isPositioned(Vector2D);
+            static bool inPosition(Vector2D);
     };
 }

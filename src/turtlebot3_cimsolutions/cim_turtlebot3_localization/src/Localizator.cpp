@@ -4,12 +4,8 @@ using namespace localizer;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-// Frequency in hertz.
-static const int FREQUENCY = 1;
-
-static bool isMoving = false;
-static bool foundFreeSpot = false;
-static bool foundTopRight = false;
+static bool hasTopRight = false;
+static bool isPositioned = false;
 static std::string mapFile;
 static Vector2D freeSpot;
 static MapCalculator mapCalculator;
@@ -30,56 +26,43 @@ void Localizator::locate() {
   const std::string ODOM_TOPIC = "odom";
 
   ros::NodeHandle nodeHandle;
+  ros::Subscriber odomSubscriber = nodeHandle.subscribe(ODOM_TOPIC, QUEUE, odomCallback);
   ros::Subscriber mapSubscriber = nodeHandle.subscribe(MAP_TOPIC, QUEUE, mapCallback);
   ros::Subscriber mapFileSubscriber = nodeHandle.subscribe(MAP_FILE_TOPIC, QUEUE, mapFileCallback);
-  ros::Subscriber odomSubscriber = nodeHandle.subscribe(ODOM_TOPIC, QUEUE, odomCallback);
   ros::spin();
 }
 
 void Localizator::mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& message) {
-  // Make sure previous move task has been completed before processing a new one.
-  if(!foundFreeSpot) {
+  if(!hasTopRight) {
     if(compareFreeSpot(freeSpot, mapCalculator.getFreeSpot(message))) {
-      foundFreeSpot = true;
+      hasTopRight = true;
     }
-
-    freeSpot = mapCalculator.getFreeSpot(message);
   }
 
-  //FOR LATER
-  if(foundTopRight) {
-    setPosition(mapCalculator.getFreeSpot(message));
-  }
-
-  ros::Rate rate(FREQUENCY);
-  rate.sleep();
+  freeSpot = mapCalculator.getFreeSpot(message);
 }
 
 void Localizator::mapFileCallback(const std_msgs::String::ConstPtr& message) {
   mapFile = message->data;
-
-  ros::Rate rate(FREQUENCY);
-  rate.sleep();
 }
 
 void Localizator::odomCallback(const nav_msgs::Odometry::ConstPtr& message) {
-  if(foundFreeSpot) {
+  if(!isPositioned) {
     Vector2D axesROS = {message->pose.pose.position.x, message->pose.pose.position.y};
     Vector2D current = CoordinateSystemConverter::convertROSToStandard(axesROS);
 
-    if(!isPositioned(current)) {
-      mover.moveAbsolute(current, freeSpot);
+    if(hasTopRight) {
+      if(!inPosition(current)) {
+        mover.moveAbsolute(current, freeSpot);
+      }
+      else {
+        isPositioned = true;
+      }
     } else {
-      foundTopRight = true;
-    }  
-  } else {
-    // Move robot 3.5 meter upwards and 3.5 meter to the right.
-    Vector2D goal = {3.5, 3.5};
-    mover.moveRelative(goal);
+      Vector2D goal = {3.5, 3.5};
+      mover.moveRelative(goal);
+    }
   }
-
-  ros::Rate rate(FREQUENCY);
-  rate.sleep();
 }
 
 // Set global parameters used by AMCL.
@@ -120,7 +103,7 @@ bool Localizator::compareFreeSpot(Vector2D vectorA, Vector2D vectorB) {
 }
 
 // Check if robot is in calculated free spot.
-bool Localizator::isPositioned(Vector2D position) {
+bool Localizator::inPosition(Vector2D position) {
   // Sensor error tolerance in meters.
   const double POSITION_TOLERANCE = 0.5;
 
