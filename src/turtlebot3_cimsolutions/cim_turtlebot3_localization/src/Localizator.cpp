@@ -4,18 +4,10 @@ using namespace localizer;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> MoveBaseClient;
 
-const static int QUEUE = 1;
 // Frequency in hertz.
-const static int MAP_FREQUENCY = 10;
-const static int MAP_FILE_FREQUENCY = 1;
-const static int ODOM_FREQUENCY = 1;
-// Sensor error tolerance in meters.
-const static double POSITION_TOLERANCE = 0.5;
-const static double FREESPOT_TOLERANCE = 0.01;
-const static std::string MAP_TOPIC = "map";
-const static std::string MAP_FILE_TOPIC = "cim_turtlebot3_mapping_mapFile";
-const static std::string ODOM_TOPIC = "odom";
+static const int FREQUENCY = 1;
 
+static bool isMoving = false;
 static bool foundFreeSpot = false;
 static bool foundTopRight = false;
 static std::string mapFile;
@@ -32,6 +24,11 @@ Localizator::~Localizator() {
 }
 
 void Localizator::locate() {
+  const int QUEUE = 1;
+  const std::string MAP_TOPIC = "map";
+  const std::string MAP_FILE_TOPIC = "cim_turtlebot3_mapping_mapFile";
+  const std::string ODOM_TOPIC = "odom";
+
   ros::NodeHandle nodeHandle;
   ros::Subscriber mapSubscriber = nodeHandle.subscribe(MAP_TOPIC, QUEUE, mapCallback);
   ros::Subscriber mapFileSubscriber = nodeHandle.subscribe(MAP_FILE_TOPIC, QUEUE, mapFileCallback);
@@ -47,21 +44,21 @@ void Localizator::mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& message) 
     }
 
     freeSpot = mapCalculator.getFreeSpot(message);
- }
+  }
 
   //FOR LATER
- if(foundTopRight) {
-   setPosition(mapCalculator.getFreeSpot(message));
- }
+  if(foundTopRight) {
+    setPosition(mapCalculator.getFreeSpot(message));
+  }
 
-  ros::Rate rate(MAP_FREQUENCY);
+  ros::Rate rate(FREQUENCY);
   rate.sleep();
 }
 
 void Localizator::mapFileCallback(const std_msgs::String::ConstPtr& message) {
   mapFile = message->data;
 
-  ros::Rate rate(MAP_FILE_FREQUENCY);
+  ros::Rate rate(FREQUENCY);
   rate.sleep();
 }
 
@@ -81,7 +78,7 @@ void Localizator::odomCallback(const nav_msgs::Odometry::ConstPtr& message) {
     mover.moveRelative(goal);
   }
 
-  ros::Rate rate(ODOM_FREQUENCY);
+  ros::Rate rate(FREQUENCY);
   rate.sleep();
 }
 
@@ -110,6 +107,9 @@ void Localizator::setPosition(Vector2D topRight) {
 
 // Compare two Vector2D objects with a small error tolerance.
 bool Localizator::compareFreeSpot(Vector2D vectorA, Vector2D vectorB) {
+  // Sensor error tolerance in meters.
+  const double FREESPOT_TOLERANCE = 0.05;
+
   if((vectorA.x + FREESPOT_TOLERANCE) > vectorB.x && (vectorA.x - FREESPOT_TOLERANCE) < vectorB.x) {
     if((vectorA.y + FREESPOT_TOLERANCE) > vectorB.y && (vectorA.y - FREESPOT_TOLERANCE) < vectorB.y) {
       return true;
@@ -121,6 +121,9 @@ bool Localizator::compareFreeSpot(Vector2D vectorA, Vector2D vectorB) {
 
 // Check if robot is in calculated free spot.
 bool Localizator::isPositioned(Vector2D position) {
+  // Sensor error tolerance in meters.
+  const double POSITION_TOLERANCE = 0.5;
+
   if((freeSpot.x + POSITION_TOLERANCE) > position.x && (freeSpot.x - POSITION_TOLERANCE) < position.x) {
     if((freeSpot.y + POSITION_TOLERANCE) > position.y && (freeSpot.y - POSITION_TOLERANCE) < position.y) {
       return true;
