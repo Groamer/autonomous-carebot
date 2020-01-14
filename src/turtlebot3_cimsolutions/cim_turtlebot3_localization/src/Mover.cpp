@@ -16,7 +16,6 @@ Mover::~Mover() {
 
 // Move to an absolute position on the X and Y axis.
 void Mover::moveAbsolute(Vector2D start, Vector2D goal) {
-    isMoving = true;
     // Tell the action client that we want to spin a thread by default.
     MoveBaseClient moveClient("move_base", true);
     // Wait for the action server to come up.
@@ -33,13 +32,7 @@ void Mover::moveAbsolute(Vector2D start, Vector2D goal) {
     moveGoal.target_pose.pose.orientation.w = 1.0;
 
     moveClient.sendGoal(moveGoal);
-    moveClient.waitForResult();
-
-    if(moveClient.getState() == actionlib::SimpleClientGoalState::SUCCEEDED) {
-        // Could be expanded in the future.
-    }
-
-    isMoving = false;
+    //moveClient.waitForResult();
 }
 
 // Move to a position relative to the robot's position.

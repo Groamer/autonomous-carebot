@@ -33,13 +33,18 @@ void Localizator::locate() {
 }
 
 void Localizator::mapCallback(const nav_msgs::OccupancyGrid::ConstPtr& message) {
-  if(!hasTopRight) {
+  std::cout << std::endl;
+  std::cout << "BRUUUUUH" << std::endl;
+  std::cout << std::endl;
+  if(!isPositioned) {
     if(compareFreeSpot(freeSpot, mapCalculator.getFreeSpot(message))) {
       hasTopRight = true;
     }
-  }
 
-  freeSpot = mapCalculator.getFreeSpot(message);
+    freeSpot = mapCalculator.getFreeSpot(message);
+  } else {
+    //launchAMCL(message);
+  }
 }
 
 void Localizator::mapFileCallback(const std_msgs::String::ConstPtr& message) {
@@ -66,11 +71,25 @@ void Localizator::odomCallback(const nav_msgs::Odometry::ConstPtr& message) {
 }
 
 // Set global parameters used by AMCL.
-void Localizator::setPosition(Vector2D topRight) {
+void Localizator::launchAMCL(const nav_msgs::OccupancyGrid::ConstPtr& message) {
   // Shutdown GMapping.
   system("rosnode kill /turtlebot3_slam_gmapping");
 
-  std::ostringstream stream;
+  std::string mapCommand = "rosrun map_server map_server " + mapFile;
+  system(mapCommand.c_str());
+
+  Vector2D spot = mapCalculator.getFreeSpot(message);
+
+  std::cout << std::endl;
+  std::cout << std::endl;
+  std::cout << "FREESPOT-X: " << freeSpot.x << std::endl;
+  std::cout << "FREESPOT-Y: " << freeSpot.y << std::endl;
+  std::cout << "SPOT-X: " << spot.x << std::endl;
+  std::cout << "SPOT-Y: " << spot.y << std::endl;
+  std::cout << std::endl;
+  std::cout << std::endl;
+
+  /*std::ostringstream stream;
   std::string xPosition;
   std::string yPosition;
 
@@ -79,10 +98,10 @@ void Localizator::setPosition(Vector2D topRight) {
   // Clear stream.
   stream.str(std::string());
   stream << topRight.y;
-  yPosition = stream.str();
+  yPosition = stream.str();*/
 
-  std::string command = "roslaunch turtlebot3_navigation turtlebot3_navigation.launch map_file:="
-    +mapFile;
+  std::string command = "roslaunch turtlebot3_navigation amcl.launch map_file:="
+    + mapFile + " initial_pose_x:=10 initial_pose_y:=10";
   system(command.c_str());
 
   ros::shutdown();

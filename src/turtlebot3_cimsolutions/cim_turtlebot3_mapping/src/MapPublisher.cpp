@@ -3,7 +3,7 @@
 using namespace mapper;
 
 // Frequency in Herz.
-static const int FREQUENCY = 1;
+static const int FREQUENCY = 10;
 static const int QUEUE_SIZE = 1;
 static const std::string TOPIC = "cim_turtlebot3_mapping_mapFile";
 

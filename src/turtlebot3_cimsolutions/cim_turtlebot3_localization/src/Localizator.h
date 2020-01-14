@@ -23,7 +23,7 @@ namespace localizer {
             static void mapCallback(const nav_msgs::OccupancyGrid::ConstPtr&);
             static void mapFileCallback(const std_msgs::String::ConstPtr&);
             static void odomCallback(const nav_msgs::Odometry::ConstPtr&);
-            static void setPosition(Vector2D);
+            static void launchAMCL(const nav_msgs::OccupancyGrid::ConstPtr&);
             static bool compareFreeSpot(Vector2D, Vector2D);
             static bool inPosition(Vector2D);
     };
